@@ -1,5 +1,4 @@
-module github.com/BGrewell/go-iperf
-
+module github.com/xiaoxiao-1022/go-iperf
 go 1.15
 
 require (
