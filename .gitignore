@@ -15,4 +15,5 @@
 # vendor/
 
 # Ignore the embedded directory
-embedded/
+embedded/\
+.idea

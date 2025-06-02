@@ -77,6 +77,7 @@ type Client struct {
 	live          bool
 	reportingChan chan *StreamIntervalReport
 	reportingFile string
+	binaryPath    string
 }
 
 func (c *Client) LoadOptionsJSON(jsonStr string) (err error) {
@@ -92,7 +93,12 @@ func (c *Client) commandString() (cmd string, err error) {
 	if c.Options.Host == nil || *c.Options.Host == "" {
 		return "", errors.New("unable to execute client. The field 'host' is required")
 	}
-	fmt.Fprintf(&builder, "%s -c %s", binaryLocation, c.Host())
+	if c.binaryPath == "" {
+		fmt.Fprintf(&builder, "%s -c %s", binaryLocation, c.Host())
+	} else {
+		binaryLocation = c.binaryPath
+		fmt.Fprintf(&builder, "%s -c %s", binaryLocation, c.Host())
+	}
 
 	if c.Options.Port != nil {
 		fmt.Fprintf(&builder, " -p %d", c.Port())
