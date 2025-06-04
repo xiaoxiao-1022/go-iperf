@@ -17,14 +17,14 @@ func NewClient(host string) *Client {
 	json := true
 	proto := Protocol(PROTO_TCP)
 	time := 10
-	length := "128KB"
+	//length := "128KB"
 	streams := 1
 	c := &Client{
 		Options: &ClientOptions{
 			JSON:    &json,
 			Proto:   &proto,
 			TimeSec: &time,
-			Length:  &length,
+			//Length:  &length,
 			Streams: &streams,
 			Host:    &host,
 		},
@@ -62,12 +62,14 @@ type ClientOptions struct {
 }
 
 type Client struct {
-	Id            string         `json:"id" yaml:"id" xml:"id"`
-	Running       bool           `json:"running" yaml:"running" xml:"running"`
-	Done          chan bool      `json:"-" yaml:"-" xml:"-"`
-	Options       *ClientOptions `json:"options" yaml:"options" xml:"options"`
-	Debug         bool           `json:"-" yaml:"-" xml:"-"`
-	StdOut        bool           `json:"-" yaml:"-" xml:"-"`
+	Id         string         `json:"id" yaml:"id" xml:"id"`
+	Running    bool           `json:"running" yaml:"running" xml:"running"`
+	Done       chan bool      `json:"-" yaml:"-" xml:"-"`
+	Options    *ClientOptions `json:"options" yaml:"options" xml:"options"`
+	Debug      bool           `json:"-" yaml:"-" xml:"-"`
+	StdOut     bool           `json:"-" yaml:"-" xml:"-"`
+	BinaryPath string
+
 	exitCode      *int
 	report        *TestReport
 	outputStream  io.ReadCloser
@@ -77,7 +79,6 @@ type Client struct {
 	live          bool
 	reportingChan chan *StreamIntervalReport
 	reportingFile string
-	binaryPath    string
 }
 
 func (c *Client) LoadOptionsJSON(jsonStr string) (err error) {
@@ -93,10 +94,10 @@ func (c *Client) commandString() (cmd string, err error) {
 	if c.Options.Host == nil || *c.Options.Host == "" {
 		return "", errors.New("unable to execute client. The field 'host' is required")
 	}
-	if c.binaryPath == "" {
+	if c.BinaryPath == "" {
 		fmt.Fprintf(&builder, "%s -c %s", binaryLocation, c.Host())
 	} else {
-		binaryLocation = c.binaryPath
+		binaryLocation = c.BinaryPath
 		fmt.Fprintf(&builder, "%s -c %s", binaryLocation, c.Host())
 	}
 
@@ -131,10 +132,7 @@ func (c *Client) commandString() (cmd string, err error) {
 	if c.Options.BlockCount != nil {
 		fmt.Fprintf(&builder, " -k %s", c.BlockCount())
 	}
-
-	if c.Options.Length != nil {
-		fmt.Fprintf(&builder, " -l %s", c.Length())
-	}
+	fmt.Fprintf(&builder, " -l %s", c.Length())
 
 	if c.Options.Streams != nil {
 		fmt.Fprintf(&builder, " -P %d", c.Streams())

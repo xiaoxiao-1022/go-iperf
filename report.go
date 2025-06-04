@@ -157,6 +157,11 @@ type StreamEndSumReport struct {
 	Seconds       float32 `json:"seconds"`
 	Bytes         int     `json:"bytes"`
 	BitsPerSecond float64 `json:"bits_per_second"`
+	JitterMs      int     `json:"jitter_ms"`
+	LostPackets   int     `json:"lost_packets"`
+	Packets       int     `json:"packets"`
+	LostPercent   int     `json:"lost_percent"`
+	Sender        bool    `json:"sender"`
 }
 
 func (sesr *StreamEndSumReport) String() string {
@@ -358,11 +363,11 @@ func (sr *ServerReport) String() string {
 }
 
 type TestReport struct {
-	Start            StartInfo         `json:"start"`
-	Intervals        []*StreamInterval `json:"intervals"`
-	End              EndInfo           `json:"end"`
-	Error            string            `json:"error"`
-	ServerOutputJson ServerReport      `json:"server_output_json"`
+	Start     StartInfo         `json:"start"`
+	Intervals []*StreamInterval `json:"intervals"`
+	End       EndInfo           `json:"end"`
+	Error     string            `json:"error"`
+	//ServerOutputJson ServerReport      `json:"server_output_json"`
 }
 
 func (tr *TestReport) String() string {

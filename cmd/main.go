@@ -1,48 +1,33 @@
 package main
 
 import (
-//"fmt"
-   "github.com/BGrewell/go-conversions"
-//"github.com/BGrewell/go-iperf"
-//"time"
+	"github.com/xiaoxiao-1022/go-iperf"
+	"os"
+
+	//"github.com/BGrewell/go-iperf"
+	//"time"
 	"fmt"
-	"github.com/BGrewell/go-iperf"
-	"time"
 )
 
 func main() {
+	proto := "udp"
 
-	s := iperf.NewServer()
 	c := iperf.NewClient("127.0.0.1")
-	c.SetIncludeServer(true)
-	fmt.Println(s.Id)
-	fmt.Println(c.Id)
+	c.BinaryPath = "D:\\Programs\\iperf3\\iperf3.exe"
+	c.SetJSON(true)
+	c.SetStreams(4)
+	c.SetTimeSec(5)
+	//c.SetInterval(1)
+	c.SetPort(5202)
+	c.SetReverse(true)
+	c.SetProto((iperf.Protocol)(proto))
 
-	err := s.Start()
+	err := c.Start()
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("failed to start client: %v\n", err)
+		os.Exit(-1)
 	}
 
-	err = c.Start()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	for c.Running {
-		time.Sleep(1 * time.Second)
-	}
-
-	fmt.Println("stopping server")
-	s.Stop()
-
-	fmt.Printf("Client exit code: %d\n", *c.ExitCode())
-	fmt.Printf("Server exit code: %d\n", *s.ExitCode)
-	iperf.Cleanup()
-	if c.Report().Error != "" {
-		fmt.Println(c.Report().Error)
-	} else {
-		fmt.Printf("Recv Rate: %s\n", conversions.IntBitRateToString(int64(c.Report().End.SumReceived.BitsPerSecond)))
-		fmt.Printf("Send Rate: %s\n", conversions.IntBitRateToString(int64(c.Report().End.SumSent.BitsPerSecond)))
-	}
-
+	<-c.Done
+	fmt.Println(c.Report().String())
 }
