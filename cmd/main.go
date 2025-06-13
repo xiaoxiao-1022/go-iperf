@@ -16,9 +16,9 @@ func main() {
 	c.BinaryPath = "D:\\Programs\\iperf3\\iperf3.exe"
 	c.SetJSON(true)
 	c.SetStreams(4)
-	c.SetTimeSec(5)
+	c.SetTimeSec(10)
 	//c.SetInterval(1)
-	c.SetPort(5202)
+	c.SetPort(5201)
 	c.SetReverse(true)
 	c.SetProto((iperf.Protocol)(proto))
 

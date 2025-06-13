@@ -323,6 +323,7 @@ type EndInfo struct {
 	SumSent     StreamEndSumReport   `json:"sum_sent"`
 	SumReceived StreamEndSumReport   `json:"sum_received"`
 	CpuReport   CpuUtilizationReport `json:"cpu_utilization_percent"`
+	Sum         StreamEndSumReport   `json:"sum"`
 }
 
 func (ei *EndInfo) String() string {
