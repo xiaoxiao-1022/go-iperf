@@ -157,7 +157,7 @@ type StreamEndSumReport struct {
 	Seconds       float32 `json:"seconds"`
 	Bytes         int     `json:"bytes"`
 	BitsPerSecond float64 `json:"bits_per_second"`
-	JitterMs      int     `json:"jitter_ms"`
+	JitterMs      float64 `json:"jitter_ms"`
 	LostPackets   int     `json:"lost_packets"`
 	Packets       int     `json:"packets"`
 	LostPercent   float64 `json:"lost_percent"`
