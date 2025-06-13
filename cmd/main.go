@@ -12,13 +12,13 @@ import (
 func main() {
 	proto := "udp"
 
-	c := iperf.NewClient("127.0.0.1")
+	c := iperf.NewClient("ping.online.net")
 	c.BinaryPath = "D:\\Programs\\iperf3\\iperf3.exe"
 	c.SetJSON(true)
 	c.SetStreams(4)
-	c.SetTimeSec(10)
+	c.SetTimeSec(5)
 	//c.SetInterval(1)
-	c.SetPort(5201)
+	c.SetPort(5209)
 	c.SetReverse(true)
 	c.SetProto((iperf.Protocol)(proto))
 
@@ -29,5 +29,5 @@ func main() {
 	}
 
 	<-c.Done
-	fmt.Println(c.Report().String())
+	fmt.Println("report:", c.Report().String())
 }
