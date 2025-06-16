@@ -530,7 +530,6 @@ func (c *Client) start() (pid int, err error) {
 
 	go func() {
 		var reporter *Reporter
-		log.Printf("starting reporter %v", c.live)
 		if c.live {
 			reporter = &Reporter{
 				ReportingChannel: c.reportingChan,
@@ -551,13 +550,10 @@ func (c *Client) start() (pid int, err error) {
 			if c.Debug {
 				fmt.Println("parsing output")
 			}
-			log.Printf("testOutput: %v", string(testOutput))
 			c.report, err = Loads(string(testOutput))
-			log.Printf(" err report: %v", err)
 			if err != nil && c.Debug {
 				fmt.Println(err.Error())
 			}
-			log.Printf("report: %v", c.report)
 		}
 		if c.Debug {
 			fmt.Println("complete")
