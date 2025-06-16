@@ -551,6 +551,7 @@ func (c *Client) start() (pid int, err error) {
 				fmt.Println("parsing output")
 			}
 			c.report, err = Loads(string(testOutput))
+			log.Printf("error: %v\n", err)
 			if err != nil && c.Debug {
 				fmt.Println(err.Error())
 			}
