@@ -530,6 +530,7 @@ func (c *Client) start() (pid int, err error) {
 
 	go func() {
 		var reporter *Reporter
+		log.Printf("starting reporter %v", c.live)
 		if c.live {
 			reporter = &Reporter{
 				ReportingChannel: c.reportingChan,
