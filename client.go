@@ -551,12 +551,13 @@ func (c *Client) start() (pid int, err error) {
 			if c.Debug {
 				fmt.Println("parsing output")
 			}
+			log.Printf("testOutput: %v", string(testOutput))
 			c.report, err = Loads(string(testOutput))
+			log.Printf(" err report: %v", err)
 			if err != nil && c.Debug {
 				fmt.Println(err.Error())
 			}
 			log.Printf("report: %v", c.report)
-			log.Printf("testOutput: %v", string(testOutput))
 		}
 		if c.Debug {
 			fmt.Println("complete")
