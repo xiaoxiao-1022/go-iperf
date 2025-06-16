@@ -555,6 +555,7 @@ func (c *Client) start() (pid int, err error) {
 			if err != nil && c.Debug {
 				fmt.Println(err.Error())
 			}
+			log.Printf("report: %v\n", string(testOutput))
 		}
 		if c.Debug {
 			fmt.Println("complete")
