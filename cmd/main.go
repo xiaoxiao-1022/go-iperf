@@ -19,7 +19,7 @@ func main() {
 	c.SetTimeSec(5)
 	//c.SetInterval(1)
 	c.SetPort(5209)
-	c.SetReverse(true)
+	//c.SetReverse(true)
 	c.SetProto((iperf.Protocol)(proto))
 
 	err := c.Start()
