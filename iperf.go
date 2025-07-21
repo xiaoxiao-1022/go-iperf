@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"path"
-	"runtime"
 )
 
 var (
@@ -15,25 +14,25 @@ var (
 	binaryLocation = ""
 )
 
-func init() {
-	// Extract the binaries
-	if runtime.GOOS == "windows" {
-		err := extractWindowsEmbeddedBinaries()
-		if err != nil {
-			log.Fatalf("error initializing iperf: %v", err)
-		}
-	} else if runtime.GOOS == "darwin" {
-		err := extractMacEmbeddedBinaries()
-		if err != nil {
-			log.Fatalf("error initializing iperf: %v\n", err)
-		}
-	} else {
-		err := extractLinuxEmbeddedBinaries()
-		if err != nil {
-			log.Fatalf("error initializing iperf: %v", err)
-		}
-	}
-}
+//func init() {
+//	// Extract the binaries
+//	if runtime.GOOS == "windows" {
+//		err := extractWindowsEmbeddedBinaries()
+//		if err != nil {
+//			log.Fatalf("error initializing iperf: %v", err)
+//		}
+//	} else if runtime.GOOS == "darwin" {
+//		err := extractMacEmbeddedBinaries()
+//		if err != nil {
+//			log.Fatalf("error initializing iperf: %v\n", err)
+//		}
+//	} else {
+//		err := extractLinuxEmbeddedBinaries()
+//		if err != nil {
+//			log.Fatalf("error initializing iperf: %v", err)
+//		}
+//	}
+//}
 
 func Cleanup() {
 	os.RemoveAll(binaryDir)
