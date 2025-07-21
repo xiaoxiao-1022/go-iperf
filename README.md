@@ -1,6 +1,7 @@
 # go-iperf
 A Go based wrapper around iperf3
 
+test need open iperf.init
 ## Basic Usage
 
 basic client setup

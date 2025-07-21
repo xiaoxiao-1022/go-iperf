@@ -35,30 +35,32 @@ func NewClient(host string) *Client {
 }
 
 type ClientOptions struct {
-	Port          *int      `json:"port" yaml:"port" xml:"port"`
-	Format        *rune     `json:"format" yaml:"format" xml:"format"`
-	Interval      *int      `json:"interval" yaml:"interval" xml:"interval"`
-	JSON          *bool     `json:"json" yaml:"json" xml:"json"`
-	LogFile       *string   `json:"log_file" yaml:"log_file" xml:"log_file"`
-	Host          *string   `json:"host" yaml:"host" xml:"host"`
-	Proto         *Protocol `json:"proto" yaml:"proto" xml:"proto"`
-	Bandwidth     *string   `json:"bandwidth" yaml:"bandwidth" xml:"bandwidth"`
-	TimeSec       *int      `json:"time_sec" yaml:"time_sec" xml:"time_sec"`
-	Bytes         *string   `json:"bytes" yaml:"bytes" xml:"bytes"`
-	BlockCount    *string   `json:"block_count" yaml:"block_count" xml:"block_count"`
-	Length        *string   `json:"length" yaml:"length" xml:"length"`
-	Streams       *int      `json:"streams" yaml:"streams" xml:"streams"`
-	Reverse       *bool     `json:"reverse" yaml:"reverse" xml:"reverse"`
-	Window        *string   `json:"window" yaml:"window" xml:"window"`
-	MSS           *int      `json:"mss" yaml:"mss" xml:"mss"`
-	NoDelay       *bool     `json:"no_delay" yaml:"no_delay" xml:"no_delay"`
-	Version4      *bool     `json:"version_4" yaml:"version_4" xml:"version_4"`
-	Version6      *bool     `json:"version_6" yaml:"version_6" xml:"version_6"`
-	TOS           *int      `json:"tos" yaml:"tos" xml:"tos"`
-	ZeroCopy      *bool     `json:"zero_copy" yaml:"zero_copy" xml:"zero_copy"`
-	OmitSec       *int      `json:"omit_sec" yaml:"omit_sec" xml:"omit_sec"`
-	Prefix        *string   `json:"prefix" yaml:"prefix" xml:"prefix"`
-	IncludeServer *bool     `json:"include_server" yaml:"include_server" xml:"include_server"`
+	Port           *int      `json:"port" yaml:"port" xml:"port"`
+	Format         *rune     `json:"format" yaml:"format" xml:"format"`
+	Interval       *int      `json:"interval" yaml:"interval" xml:"interval"`
+	JSON           *bool     `json:"json" yaml:"json" xml:"json"`
+	LogFile        *string   `json:"log_file" yaml:"log_file" xml:"log_file"`
+	Host           *string   `json:"host" yaml:"host" xml:"host"`
+	Proto          *Protocol `json:"proto" yaml:"proto" xml:"proto"`
+	Bandwidth      *string   `json:"bandwidth" yaml:"bandwidth" xml:"bandwidth"`
+	TimeSec        *int      `json:"time_sec" yaml:"time_sec" xml:"time_sec"`
+	Bytes          *string   `json:"bytes" yaml:"bytes" xml:"bytes"`
+	BlockCount     *string   `json:"block_count" yaml:"block_count" xml:"block_count"`
+	Length         *string   `json:"length" yaml:"length" xml:"length"`
+	Streams        *int      `json:"streams" yaml:"streams" xml:"streams"`
+	Reverse        *bool     `json:"reverse" yaml:"reverse" xml:"reverse"`
+	Window         *string   `json:"window" yaml:"window" xml:"window"`
+	MSS            *int      `json:"mss" yaml:"mss" xml:"mss"`
+	NoDelay        *bool     `json:"no_delay" yaml:"no_delay" xml:"no_delay"`
+	Version4       *bool     `json:"version_4" yaml:"version_4" xml:"version_4"`
+	Version6       *bool     `json:"version_6" yaml:"version_6" xml:"version_6"`
+	TOS            *int      `json:"tos" yaml:"tos" xml:"tos"`
+	ZeroCopy       *bool     `json:"zero_copy" yaml:"zero_copy" xml:"zero_copy"`
+	OmitSec        *int      `json:"omit_sec" yaml:"omit_sec" xml:"omit_sec"`
+	Prefix         *string   `json:"prefix" yaml:"prefix" xml:"prefix"`
+	IncludeServer  *bool     `json:"include_server" yaml:"include_server" xml:"include_server"`
+	ConnectTimeout *int      `json:"connect_timeout" yaml:"connect_timeout" xml:"connect_timeout"`
+	IdleTimeout    *int      `json:"idle_timeout" yaml:"idle_timeout" xml:"idle_timeout"`
 }
 
 type Client struct {
@@ -184,6 +186,13 @@ func (c *Client) commandString() (cmd string, err error) {
 
 	if c.Options.IncludeServer != nil && *c.Options.IncludeServer {
 		builder.WriteString(" --get-server-output")
+	}
+
+	if c.Options.ConnectTimeout != nil {
+		fmt.Fprintf(&builder, " --connect-timeout %d", c.ConnectTimeout())
+	}
+	if c.Options.IdleTimeout != nil {
+		fmt.Fprintf(&builder, " --idle-timeout %d", c.IdleTimeout())
 	}
 
 	return builder.String(), nil
@@ -490,6 +499,28 @@ func (c *Client) SetModeLive() <-chan *StreamIntervalReport {
 	c.reportingFile = f.Name()
 	c.SetLogFile(c.reportingFile)
 	return c.reportingChan
+}
+
+func (c *Client) ConnectTimeout() int {
+	if c.Options.ConnectTimeout == nil {
+		return 0
+	}
+	return *c.Options.ConnectTimeout
+}
+
+func (c *Client) SetConnectTimeout(timeout int) {
+	c.Options.ConnectTimeout = &timeout
+}
+
+func (c *Client) IdleTimeout() int {
+	if c.Options.IdleTimeout == nil {
+		return 0
+	}
+	return *c.Options.IdleTimeout
+}
+
+func (c *Client) SetIdleTimeout(timeout int) {
+	c.Options.IdleTimeout = &timeout
 }
 
 func (c *Client) Start() (err error) {
