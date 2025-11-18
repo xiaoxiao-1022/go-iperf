@@ -15,6 +15,8 @@ require (
 )
 
 require (
+	github.com/Netflix/go-expect v0.0.0-20220104043353-73e0943537d2 // indirect
+	github.com/creack/pty v1.1.17 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/hpcloud/tail v1.0.0 // indirect
 	golang.org/x/net v0.0.0-20220722155237-a158d28d115b // indirect

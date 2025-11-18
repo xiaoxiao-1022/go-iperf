@@ -35,32 +35,36 @@ func NewClient(host string) *Client {
 }
 
 type ClientOptions struct {
-	Port           *int      `json:"port" yaml:"port" xml:"port"`
-	Format         *rune     `json:"format" yaml:"format" xml:"format"`
-	Interval       *int      `json:"interval" yaml:"interval" xml:"interval"`
-	JSON           *bool     `json:"json" yaml:"json" xml:"json"`
-	LogFile        *string   `json:"log_file" yaml:"log_file" xml:"log_file"`
-	Host           *string   `json:"host" yaml:"host" xml:"host"`
-	Proto          *Protocol `json:"proto" yaml:"proto" xml:"proto"`
-	Bandwidth      *string   `json:"bandwidth" yaml:"bandwidth" xml:"bandwidth"`
-	TimeSec        *int      `json:"time_sec" yaml:"time_sec" xml:"time_sec"`
-	Bytes          *string   `json:"bytes" yaml:"bytes" xml:"bytes"`
-	BlockCount     *string   `json:"block_count" yaml:"block_count" xml:"block_count"`
-	Length         *string   `json:"length" yaml:"length" xml:"length"`
-	Streams        *int      `json:"streams" yaml:"streams" xml:"streams"`
-	Reverse        *bool     `json:"reverse" yaml:"reverse" xml:"reverse"`
-	Window         *string   `json:"window" yaml:"window" xml:"window"`
-	MSS            *int      `json:"mss" yaml:"mss" xml:"mss"`
-	NoDelay        *bool     `json:"no_delay" yaml:"no_delay" xml:"no_delay"`
-	Version4       *bool     `json:"version_4" yaml:"version_4" xml:"version_4"`
-	Version6       *bool     `json:"version_6" yaml:"version_6" xml:"version_6"`
-	TOS            *int      `json:"tos" yaml:"tos" xml:"tos"`
-	ZeroCopy       *bool     `json:"zero_copy" yaml:"zero_copy" xml:"zero_copy"`
-	OmitSec        *int      `json:"omit_sec" yaml:"omit_sec" xml:"omit_sec"`
-	Prefix         *string   `json:"prefix" yaml:"prefix" xml:"prefix"`
-	IncludeServer  *bool     `json:"include_server" yaml:"include_server" xml:"include_server"`
-	ConnectTimeout *int      `json:"connect_timeout" yaml:"connect_timeout" xml:"connect_timeout"`
-	IdleTimeout    *int      `json:"idle_timeout" yaml:"idle_timeout" xml:"idle_timeout"`
+	Port             *int      `json:"port" yaml:"port" xml:"port"`
+	Format           *rune     `json:"format" yaml:"format" xml:"format"`
+	Interval         *int      `json:"interval" yaml:"interval" xml:"interval"`
+	JSON             *bool     `json:"json" yaml:"json" xml:"json"`
+	LogFile          *string   `json:"log_file" yaml:"log_file" xml:"log_file"`
+	Host             *string   `json:"host" yaml:"host" xml:"host"`
+	Proto            *Protocol `json:"proto" yaml:"proto" xml:"proto"`
+	Bandwidth        *string   `json:"bandwidth" yaml:"bandwidth" xml:"bandwidth"`
+	TimeSec          *int      `json:"time_sec" yaml:"time_sec" xml:"time_sec"`
+	Bytes            *string   `json:"bytes" yaml:"bytes" xml:"bytes"`
+	BlockCount       *string   `json:"block_count" yaml:"block_count" xml:"block_count"`
+	Length           *string   `json:"length" yaml:"length" xml:"length"`
+	Streams          *int      `json:"streams" yaml:"streams" xml:"streams"`
+	Reverse          *bool     `json:"reverse" yaml:"reverse" xml:"reverse"`
+	Window           *string   `json:"window" yaml:"window" xml:"window"`
+	MSS              *int      `json:"mss" yaml:"mss" xml:"mss"`
+	NoDelay          *bool     `json:"no_delay" yaml:"no_delay" xml:"no_delay"`
+	Version4         *bool     `json:"version_4" yaml:"version_4" xml:"version_4"`
+	Version6         *bool     `json:"version_6" yaml:"version_6" xml:"version_6"`
+	TOS              *int      `json:"tos" yaml:"tos" xml:"tos"`
+	ZeroCopy         *bool     `json:"zero_copy" yaml:"zero_copy" xml:"zero_copy"`
+	OmitSec          *int      `json:"omit_sec" yaml:"omit_sec" xml:"omit_sec"`
+	Prefix           *string   `json:"prefix" yaml:"prefix" xml:"prefix"`
+	IncludeServer    *bool     `json:"include_server" yaml:"include_server" xml:"include_server"`
+	ConnectTimeout   *int      `json:"connect_timeout" yaml:"connect_timeout" xml:"connect_timeout"`
+	IdleTimeout      *int      `json:"idle_timeout" yaml:"idle_timeout" xml:"idle_timeout"`
+	RsaPublicKeyPath *string   `json:"rsa_public_key_path" yaml:"rsa_public_key_path" xml:"rsa_public_key_path"`
+	UserName         *string   `json:"user_name" yaml:"user_name" xml:"user_name"`
+	Bind             *string   `json:"bind" yaml:"bind" xml:"bind"`
+	BindDev          *string   `json:"bind_dev" yaml:"bind_dev" xml:"bind_dev"`
 }
 
 type Client struct {
@@ -194,7 +198,18 @@ func (c *Client) commandString() (cmd string, err error) {
 	if c.Options.IdleTimeout != nil {
 		fmt.Fprintf(&builder, " --idle-timeout %d", c.IdleTimeout())
 	}
-
+	if c.Options.RsaPublicKeyPath != nil {
+		fmt.Fprintf(&builder, " --rsa-public-key-path %s", *c.Options.RsaPublicKeyPath)
+	}
+	if c.Options.UserName != nil {
+		fmt.Fprintf(&builder, " --username %s", *c.Options.UserName)
+	}
+	if c.Options.Bind != nil {
+		fmt.Fprintf(&builder, " -b %s", *c.Options.Bind)
+	}
+	if c.Options.BindDev != nil {
+		fmt.Fprintf(&builder, " --bind-dev %s", *c.Options.BindDev)
+	}
 	return builder.String(), nil
 }
 
@@ -521,6 +536,31 @@ func (c *Client) IdleTimeout() int {
 
 func (c *Client) SetIdleTimeout(timeout int) {
 	c.Options.IdleTimeout = &timeout
+}
+
+func (c *Client) RsaPublicKeyPath() *string {
+	return c.Options.RsaPublicKeyPath
+}
+func (c *Client) SetRsaPublicKeyPath(path string) {
+	c.Options.RsaPublicKeyPath = &path
+}
+func (c *Client) UserName() *string {
+	return c.Options.UserName
+}
+func (c *Client) setUserName(userName string) {
+	c.Options.UserName = &userName
+}
+func (c *Client) Bind() *string {
+	return c.Options.Bind
+}
+func (c *Client) SetBind(bind string) {
+	c.Options.Bind = &bind
+}
+func (c *Client) BindDev() *string {
+	return c.Options.BindDev
+}
+func (c *Client) SetBindDev(bindDev string) {
+	c.Options.BindDev = &bindDev
 }
 
 func (c *Client) Start() (err error) {
